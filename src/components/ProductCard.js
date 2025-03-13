@@ -31,7 +31,7 @@ export default function ProductCard({ product, index = 0 }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
         />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
       </div>
       
       <div className="p-4">

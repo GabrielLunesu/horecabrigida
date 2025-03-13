@@ -27,16 +27,16 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`sticky top-0 z-50 bg-white shadow-sm transition-all duration-300 ${scrolled ? 'shadow-md py-2' : 'py-4'}`}>
+    <header className={`sticky top-0 z-50 bg-white backdrop-blur-md bg-opacity-90 transition-all duration-300 ${scrolled ? 'shadow-lg py-2' : 'py-3'}`}>
       <div className="container">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
               src="/horecabrigida-logo.png"
               alt="Horeca Brigida Logo"
-              width={200}
-              height={50}
-              className={`h-12 w-auto transition-all duration-300 ${scrolled ? 'h-10' : 'h-12'}`}
+              width={160}
+              height={40}
+              className={`w-auto transition-all duration-300 ${scrolled ? 'h-8' : 'h-9'}`}
               priority
             />
           </Link>
@@ -45,42 +45,47 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link 
               href="/" 
-              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative ${
+              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative group ${
                 pathname === '/' ? 'text-[var(--primary)]' : ''
               }`}
             >
               <span>Home</span>
-              {pathname === '/' && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--primary)] mt-0.5"></span>
-              )}
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full ${
+                pathname === '/' ? 'w-full' : ''
+              }`}></span>
             </Link>
             <Link 
               href="/catalog" 
-              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative ${
+              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative group ${
                 pathname === '/catalog' ? 'text-[var(--primary)]' : ''
               }`}
             >
               <span>Catalogus</span>
-              {pathname === '/catalog' && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--primary)] mt-0.5"></span>
-              )}
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full ${
+                pathname === '/catalog' ? 'w-full' : ''
+              }`}></span>
             </Link>
             <Link 
               href="/contact" 
-              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative ${
+              className={`text-foreground hover:text-[var(--primary)] font-medium transition-colors relative group ${
                 pathname === '/contact' ? 'text-[var(--primary)]' : ''
               }`}
             >
               <span>Contact</span>
-              {pathname === '/contact' && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[var(--primary)] mt-0.5"></span>
-              )}
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full ${
+                pathname === '/contact' ? 'w-full' : ''
+              }`}></span>
             </Link>
             <Link 
               href="/catalog" 
-              className="btn-primary hover:scale-105 transition-transform"
+              className="btn-primary hover:scale-105 transition-transform shadow-md hover:shadow-lg"
             >
-              Bekijk Producten
+              <span className="flex items-center">
+                <span>Bekijk Producten</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
             </Link>
           </nav>
 
@@ -132,10 +137,13 @@ export default function Header() {
             </Link>
             <Link 
               href="/catalog" 
-              className="btn-primary text-center"
+              className="btn-primary text-center flex items-center justify-center"
               onClick={() => setIsMenuOpen(false)}
             >
-              Bekijk Producten
+              <span>Bekijk Producten</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </Link>
           </nav>
         )}

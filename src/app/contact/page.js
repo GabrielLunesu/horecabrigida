@@ -1,9 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import ContactForm from '@/components/ContactForm';
 
+// Client component for the form
+function ContactFormWrapper() {
+  return <ContactForm />;
+}
+
+// Server component for the page
 export default function ContactPage() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -101,19 +107,46 @@ export default function ContactPage() {
             
             <div className="bg-white rounded-xl shadow-md overflow-hidden slide-up" style={{ animationDelay: '0.5s' }}>
               <div className="relative h-[300px] w-full">
-                {/* This would be replaced with an actual Google Maps embed in a production environment */}
-                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">Kaart van Brunssum</p>
-                </div>
-                {/* Placeholder for map */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+                {/* Google Maps embed */}
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2518.232469805203!2d5.9679723!3d50.9349675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0bdb1e83b5de7%3A0x2a5b9b3f5c391c3d!2sBrunssum%2C%20Netherlands!5e0!3m2!1sen!2sus!4v1647532200000!5m2!1sen!2sus" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0"
+                  onLoad={() => setMapLoaded(true)}
+                ></iframe>
+                
+                {/* Loading overlay */}
+                {!mapLoaded && (
+                  <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary)]"></div>
+                  </div>
+                )}
+                
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-black/10"></div>
               </div>
             </div>
           </div>
           
           {/* Contact Form */}
           <div className={`transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`} style={{ transitionDelay: '200ms' }}>
-            <ContactForm />
+            <Suspense fallback={
+              <div className="bg-white rounded-xl shadow-md p-6 animate-pulse">
+                <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+                <div className="space-y-4">
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              </div>
+            }>
+              <ContactFormWrapper />
+            </Suspense>
           </div>
         </div>
         

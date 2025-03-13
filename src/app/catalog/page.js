@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import { getAllProducts, getCategories } from '@/lib/products';
 
-export default function CatalogPage() {
+// Client component that uses useSearchParams
+function CatalogContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -19,20 +20,22 @@ export default function CatalogPage() {
     const allProducts = getAllProducts();
     const allCategories = getCategories();
     
-    setProducts(allProducts);
-    setFilteredProducts(allProducts);
-    setCategories(allCategories);
-    
-    // Check if there's a category in the URL
-    const categoryParam = searchParams.get('category');
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
+    if (allProducts && allCategories) {
+      setProducts(allProducts);
+      setFilteredProducts(allProducts);
+      setCategories(allCategories);
+      
+      // Check if there's a category in the URL
+      const categoryParam = searchParams.get('category');
+      if (categoryParam) {
+        setSelectedCategory(categoryParam);
+      }
 
-    // Animation effect
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
+      // Animation effect
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 100);
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -90,6 +93,15 @@ export default function CatalogPage() {
     e.preventDefault();
     // Search is already applied via useEffect
   };
+
+  // Add loading state
+  if (!products.length) {
+    return (
+      <div className="container py-12 flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[var(--primary)]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 bg-white">
@@ -263,5 +275,54 @@ export default function CatalogPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component that wraps the content in Suspense
+export default function CatalogPage() {
+  return (
+    <Suspense fallback={
+      <div className="container py-12">
+        <div className="text-center mb-12 animate-pulse">
+          <div className="h-10 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto"></div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-md p-6 animate-pulse">
+              <div className="h-6 bg-gray-200 rounded w-1/3 mb-6"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-gray-200"></div>
+                  <div className="p-4">
+                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
+                    <div className="flex space-x-2">
+                      <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <CatalogContent />
+    </Suspense>
   );
 } 
